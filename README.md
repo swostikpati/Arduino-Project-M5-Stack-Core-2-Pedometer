@@ -204,3 +204,71 @@ Calories burned =
 Total Walk Time (in mins) x METs x 3.5 x (your body weight in kilograms) /200
 
 The MET value for walking is defined in the section of symbolic constants.
+
+#### Final User Interface
+The final user interface shows the user the number of steps they took, the distance they traveled
+and the number of calories they burnt during the period. The screen keeps getting updated every
+200 ms as the function gets called in the loop function. The image below shows how the final UI
+looks like.
+
+[Picture]
+
+[Picture]
+
+#### Loop Function
+The second part of the main function is the loop function. It keeps calling all the functions called
+in its body repeatedly to perform all the desired actions. After the setup function, the loop
+function displays the initial user interface. The set_weight function is also called to keep
+updating the weight given as input by the user. When the user presses the “Done” button, the
+code replaces the initial UI with the final UI and keeps refreshing the screen after a delay of 200
+ms.
+
+## Results and Evaluation
+### Initial User Interface
+#### Testing
+The Initial User Interface was tested by user interaction. Each of the four buttons were
+individually pressed to make sure they were touch enabled. The change in weight value validates
+the user input. Finally, as soon as the user presses the done button, they are taken into the final
+UI screen.
+
+#### Challenges and Solutions
+Figuring out a desirable way of taking the weight as input was a big hassle. Making a
+number-pad for such a trivial task didn’t seem wise. So we devised a better mechanism to take
+the weight as input from the user. We provide the user with four buttons, each giving the option
+to increment or decrement the weight by either 1 or 5. This allows the user to set the desired
+weight. Finally the user presses done and is taken to the next screen. Another challenge was to
+decide the placement of buttons and text on the screen. But with several trial runs, we were able
+to figure out an intuitive UI for the user.
+
+The most important challenge that we faced while taking user input was caused due to the
+excessively high looping rate (200ms). Due to this even when the user pressed a button once, it
+got registered as several presses(based on the time for which the finger was pressed), and
+incremented/decremented the weight by massive amounts. To prevent this, we introduced a flag
+(boolean expression). This flag switched between true and false values. For a button to be
+registered as a press, apart from the press point being in the region of the touch area, the flag
+must also have a true value. Also as soon as the press is registered, the flag turns false thereby
+eliminating chances of a double press and will only turn true when the user removes his finger
+off the screen. So a button will only register as a second press when the user lifts his finger from
+the screen and presses again.
+
+### Computing Acceleration
+#### Testing
+The evaluation of the final value of the magnitude of acceleration is done by using the serial
+plotter and serial monitor functions in Arduino IDE. The values that we get from the serial
+monitor match the desired values of acceleration magnitude (in G) that we should get. Also, on
+plotting these values in the serial plotter and moving the M5 stack device, we observe
+corresponding shifts in the graph (in form of peaks).
+
+#### Challenges and Solutions
+There were two big challenges while calculating the net magnitude of acceleration - filtering data
+and excluding force of gravity.\
+● As discussed earlier, the accelerometer data is filled with a lot of noise and therefore
+needs to be filtered using a low pass filter to allow only the low frequencies to travel
+excluding the excess noise. This was employed using the filter function which used the
+exponential moving average method to build a 1st degree low pass filter.\
+● To exclude the force of gravity, we followed the method mentioned in the paper “Step
+Detection Algorithm For Accurate Distance Estimation Using Dynamic Step Length”.
+We computed an average magnitude of acceleration using 50 trials and defined the net
+magnitude as the absolute difference between the average value and each observation.
+This facilitated the process of excluding all the force due to gravity data that might cause
+bias in our observations.
