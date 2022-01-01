@@ -390,3 +390,54 @@ functions, there weren’t many challenges to this. The only challenge was to di
 information in a well formatted way so as to make it easy for the user to read from the screen.
 We divided the screen into three horizontal sections, each showing the step count, the distance
 travelled, and the calories burnt, respectively.
+
+## Conclusion and Future Work
+### Project Achievements
+The following are the milestones that we have successfully achieved in our project:\
+● Build a fully functional working prototype of our project - Pedometer.\
+● Configure the M5 stack to allow the user to input their weight.\
+● Filtering raw data, creating interactive user interfaces, and implementing many other\
+small applications which have big implications for the final project.\
+● Calculate the number of steps taken by the user, the distance travelled by the user, and the
+calories burnt by the user.\
+● Display the information in a clear and concise manner with real-time updates\
+● Figure out an adequate threshold for step detection, and a mechanism to calculate
+distance travelled and calories burnt.\
+● Eliminate the problem of multiple counting of steps, excessive increments of weight
+values, and many other problems.\
+● Extensive testing of our product to make sure it provides as accurate values as possible in
+the scope of our project.
+
+## Potential Developments
+The following improvements can be made in our product to enhance its value even further:\
+● Using better and more efficient methods of step counting, distance measurement, and
+calorie calculations.\
+● Using better mechanisms of filtering data to give even more accurate information.\
+● Generalizing the algorithm to accommodate more forms of physical activity apart from
+walking and map out these activities separately.\
+● Using GPS sensors and Google maps API to map out the route taken by the user while
+performing the activities so as to make the interface more creative and interactive\
+Calculating BMI using data obtained from the user and the sensors which would be very
+helpful for several applications.\
+● Giving users the option to set daily goals for themselves therby increasing their sense of
+accountability.\
+● Curating personalized pathways to help the user achieve a better and healthy lifestyle.
+
+## References
+● Who.int. 2021. Cardiovascular diseases (CVDs). [online] Available at:
+https://www.who.int/news-room/fact-sheets/detail/cardiovascular-diseases-(cvds)
+
+● MET values of 800+ Activities. https://golf.procon.org/met-values-for-800-activities/
+
+● MATLAB Arduino Tutorial 4 - Filtering Noise out of 3-axis Accelerometer Data in
+Real-time. https://www.youtube.com/watch?v=TeKk3DjN_gs
+
+● Step Detection Algorithm For Accurate Distance Estimation Using Dynamic Step
+Length. https://arxiv.org/ftp/arxiv/papers/1801/1801.02336.pdf
+
+● Calorie Calculation using MET values. https://www.healthline.com/health/what-are-mets
+
+● M5 Docs: https://docs.m5stack.com/en/api/core2/touch
+
+● Acceleration Formula:
+https://physics.stackexchange.com/questions/41653/how-do-i-get-the-total-acceleration-from-3-axes
