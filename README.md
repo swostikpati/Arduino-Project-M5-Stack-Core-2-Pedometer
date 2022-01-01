@@ -272,3 +272,121 @@ We computed an average magnitude of acceleration using 50 trials and defined the
 magnitude as the absolute difference between the average value and each observation.
 This facilitated the process of excluding all the force due to gravity data that might cause
 bias in our observations.
+
+### Step Detection
+#### Testing
+Each one of us walked several steps with the M5 stack tied to their wrists, or in their
+pockets(mimicking a mobile phone). The number of steps that the user took were compared to
+the final step count shown in the screen. It was found that for short distances the step counter
+gave almost accurate results with an error rate of +/-2%. For long distances, the results were
+within the error rate of step calculation was +/-5%.\
+To verify our device with other similar devices, we compared the step calculation by our device
+to that of Google fit and the observations are laid down below:
+
+[Picture]
+
+[Picture]
+
+[Picture]
+
+The left image shows the initial step count and the right-most one shows the final step count in
+Google Fit. The center one shows the calculation of steps in the M5 stack for the same walk. As
+we can see the step count in our device (286 steps) is very close to the one calculated by Google
+Fit (2774 - 2474 = 300 steps)
+
+#### Challenges and Solutions
+There were two big challenges while developing the algorithm to calculate steps - setting a
+reasonable threshold for step detection and avoiding multiple step counts for the same step.\
+● Setting a reasonable threshold - We tried with a range of acceleration values for setting
+the step calculation. Initially we used to test our product by manually walking and
+checking for different threshold values. Even though this helped us get closer to the
+threshold values, it was very time consuming and couldn’t give us the most accurate
+value for the threshold. On further research we learnt the use of serial plotter and serial
+monitor in the arduino IDE. Using the values from the serial monitor and plotting them in
+excel, we were able to figure out an accurate threshold for step detection. Our
+observations were further validated during the testing phase.\
+● Avoiding false/multiple step counts - To avoid false step counts(false peaks), we observed
+the false peaks from the data from the serial monitor and decided to keep our threshold
+above the false peaks. One more problem that we encountered was that as the program
+refreshed much faster than a user could complete a full step, multiple steps were
+calculated for the same step or during random jerks during which the net acceleration
+stayed above the threshold. This led to incorrect step counts. To counter this flaw we
+introduced another flag which was a boolean expression varying between true and false.
+To detect a step, the acceleration must go above the threshold set and the flag also must
+be true. As soon as the acceleration goes beyond the threshold value, the step count is
+incremented and the flag turns false. The flag will only turn true again when the net
+acceleration comes below the threshold set. This will present the calculation of multiple
+steps and give us an extremely accurate reading of steps. It will also counter the problem
+of random jerks or motion in a vehicle.
+
+### Distance Measurement
+#### Testing
+We validated the distance measurement by walking for certain distances and then physically
+mapping the distance travelled (using applications from the internet). We compared our values
+and found them to be quite close to the actual measurement.
+
+#### Challenges and Solutions
+Initially it was difficult to devise a mechanism to measure the distance traveled by the user.
+There are several methods that we studied. Some were beyond the scope of our project and
+others couldn’t provide the distance measurement in real time. One of the methods that we
+looked into was multiplying the step count by the average step length (a fixed number) of a
+human being. We figured this could work and implemented it in our project, but on testing we
+figured out that it was far from accurate for both short and long distances. The real step length
+differed while walking (sometimes more and sometimes less than the average step length). This
+caused discrepancies in the calculation of total distance.\
+To counter this problem, we devised a modification to the method. Instead of multiplying the
+steps by a fixed number(average step length), we thought of incrementing the distance by a
+random length between maximum and minimum step length of an average user. Even though the
+real time additions to the distance may not be the real distance covered by the user, the
+aggregated final distance turned out to be very close to the real distance traveled by the user
+hence making our estimate much more accurate.
+
+### Calorie Calculation
+#### Testing
+Initially we tested to see if our formula was running properly, based on the given weight and
+walk time. On manually calculating the calories based on the walk time and weight, we found the
+values to be almost the same as the one shown in the device. This way we were sure the calorie
+calculation was close to accurate. We further went to check where our device stood in terms of
+apps like Google Fit. The comparison is shown in the images below.
+
+[Picture]
+
+[Picture]
+
+[Picture]
+
+The left image shows the initial calorie count and the right-most image shows the final calorie
+count in the Google Fit application. The center image shows the calorie count in the M5 Stack
+device. As we can see the calorie count in our device (11.8 cal) is very close to the one calculated
+by Google Fit (1125 - 1115 = 10cal).
+
+#### Challenges and Solutions
+Even though the amount of calories burnt could be calculated using a simple formula, obtaining
+the information required for the formula was a difficult task. We had to design an entire initial
+interactive user interface to be able to take the weight of the user as input from them. The
+challenges for designing this interactive interface are already highlighted above. Further, we also
+required the walk time of the user (in minutes). Initially we thought of using the system time but
+we realized there was a big flaw in using this approach. There might be extended periods of time 
+when the user won’t be moving but the system time would continue to increment. This will cause
+an extremely inaccurate measurement of the user’s walk time.
+
+To counter this flaw, we resorted to a similar method we used for measuring the distance traveled
+by the user. Whenever the user took a step we incremented the walk time by a random value
+between the minimum and maximum step time of an average user. Again, even though the real
+time additions to the walk time may not be the real time taken by the user to walk a step, the
+aggregated final walk time will be very close to the real walk time traveled by the user, hence
+making our estimate very accurate. This walk time was then used to calculate the calories using
+the formula and the final value was displayed to the user in real time.
+
+### Final User Interface
+#### Testing
+The final user interface shows the real time values of steps taken, distance travelled, and calories
+burned. We tested this component by observing the screen while walking. The steps, distance,
+and the calories got updated in real time without any lag. The measurements were also accurate.
+
+#### Challenges and Solutions
+Since the final user interface required us to just display the information provided by other
+functions, there weren’t many challenges to this. The only challenge was to display all the
+information in a well formatted way so as to make it easy for the user to read from the screen.
+We divided the screen into three horizontal sections, each showing the step count, the distance
+travelled, and the calories burnt, respectively.
