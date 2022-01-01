@@ -119,3 +119,88 @@ the rectangle objects.
 width b units. The coordinates of the center of the corresponding circular touch area will
 be (a/2,b/2) and its radius is a/2 or b/2.
 
+#### Display Weight
+This function wprint is used to display the weight of the user on the screen. It is called inside the
+set_weight function to keep printing the updated weight of the user.
+
+#### Update Weight
+The pressed function is called for each of the four buttons (+ and -) to increment and decrement
+weight. The set_weight function increments or decrements the weight based on the button
+clicked. It then calls the wprint function to display the updated weight. The image below shows
+the initial user interface with updated weights.
+
+[Picture]
+
+#### Filtration of Raw Sensor Data
+The data from the IMU accelerometer sensors is raw and unfiltered. This data needs to be filtered
+before being used for calculations as it has a lot of noise. We incorporate a 1st degree Low-pass
+filter called Exponential Moving average filter to remove the excess noise.\
+The filter is applied based on the equation below:
+
+aFilt = ((1-α) * aFilt(old)) + (α * aRaw)
+
+aFilt is the value of accelerometer data after filtration and aRaw is the value of the accelerometer
+data before filtration. ‘α’ depicts the extent of filtration which is between 0 and 1 (0 depicts the
+greatest extent of filtration).\
+The graphs below show the difference in net magnitude of acceleration values when the M5
+stack device is in rest position.
+
+[Picture]
+
+[Picture]
+
+As it is evident from the graphs the graph without filtration shows much more noise in the signal
+than the one with filtration applied (the single peak in towards the end of the graph was due to
+unintentional movement of the device). Therefore it is important to apply filtration to the raw
+data in order to get a more smooth reading.
+
+#### Computing Acceleration
+Calculating the final magnitude of the acceleration is a multi-fold process. We used the approach
+highlighted in the research paper “Step Detection Algorithm For Accurate Distance Estimation
+Using Dynamic Step Length” for computing acceleration. The steps are highlighted below:\
+● The M5stack comes with a built-in accelerometer sensor present in the Inertial
+Measurement Unit of the M5stack. It takes in three variables, each corresponding to the
+three axis of acceleration.\
+● After the acceleration values are obtained, they are filtered using the filter function.\
+● The magnitude of the acceleration is calculated using the formula:
+
+Magnitude = sqrt(𝑥^2 + y^2 + z^2)
+
+Where x, y and z correspond to the acceleration values along the three axes.\
+● First, an initial acceleration is computed. Then an average acceleration is computed for
+50 trials.
+● The final magnitude is the absolute difference between the initial and average magnitude.
+● This process ensures the removal of the force of gravity from the final magnitude and
+makes the value desirable for step detection.
+
+#### Detecting Steps
+Steps are detected with the help of a simple algorithm. First a threshold for acceleration is set.
+When the net magnitude of the acceleration of the device goes beyond this threshold, a step is
+detected. The threshold was set by first graphing the points of net acceleration magnitude from
+the serial monitor. We observed the trend of peaks in our data when we took a step or did an
+action that mimicked a step (jerks, rotations, etc.). The graph showing the values of net
+magnitude and the threshold line is given below.
+
+[Picture]
+
+Based on the peaks, we decided on setting 0.05 G of acceleration as the threshold value for step
+detection.\
+The function for step detection also updates the walk time and distance. Every time a step is
+detected, the distance is incremented by a random value between minimum and maximum step
+length (in meters) of an average human being. The walk time is set in a similar way by
+incrementing it by a random value between minimum and maximum time taken by an average
+human being to take a step. Since the seed of the random number generator was set to system
+time, it always produced new sets of random numbers. Finally the calories function is also called
+inside this function to update the total calories burnt.
+
+#### Calculating Calories
+Calories are calculated based on the weight of the user, the walk time (in minutes), and the MET
+value of the physical activity (walking). MET stands for Metabolic Equivalents. One MET is
+defined as the energy you use when you’re resting or sitting still. An activity that has a value of 4
+METs means you’re exerting four times the energy than you would if you were sitting still.\
+The formula for number of calories burned calculation is given below:
+
+Calories burned =
+Total Walk Time (in mins) x METs x 3.5 x (your body weight in kilograms) /200
+
+The MET value for walking is defined in the section of symbolic constants.
